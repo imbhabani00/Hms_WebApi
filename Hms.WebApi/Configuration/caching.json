@@ -1,0 +1,14 @@
+{
+  "Caching": {
+    "InMemory": {
+      "DefaultSizeLimit": 100,
+      "SizeLimit": 1024
+    },
+    "Redis": {
+      "Configuration": "localhost:6379",
+      "InstanceName": "HMS_"
+    },
+    "AccessCodeExpiry": "00:10:00",
+    "SessionExpiry": "01:00:00"
+  }
+}

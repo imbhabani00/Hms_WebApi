@@ -1,0 +1,1 @@
+{"@t":"2025-12-31T04:55:30.8050120Z","@mt":"SQL Connection successful: {DbServer}","DbServer":"(localdb)\\mssqllocaldb","Application":"HMSAPI"}

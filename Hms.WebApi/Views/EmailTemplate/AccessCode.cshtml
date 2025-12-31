@@ -1,0 +1,31 @@
+﻿@model Hms.Service.Request.Email.AccessCodeEmailModel
+@{
+    Layout = "_EmailLayout";
+    ViewBag.LoginUrl = Model.LoginUrl;
+}
+
+<h1>Your Access Code 🔐</h1>
+
+<p>Hi <strong>@Model.FirstName @Model.LastName</strong>,</p>
+
+<p>We received a request for a new access code for your HMS account. Use the code below to complete your login:</p>
+
+<div class="access-code-box">
+    <p style="margin: 0 0 10px 0; color: #666; font-size: 14px;">Your Access Code</p>
+    <div class="access-code">@Model.AccessCode</div>
+    <p style="margin: 10px 0 0 0; color: #999; font-size: 12px;">Valid for @Model.ValidMinutes minutes</p>
+</div>
+
+<p><strong>Security Notice:</strong></p>
+<ul>
+    <li>This code expires in <strong>@Model.ValidMinutes minutes</strong></li>
+    <li>If you didn't request this code, please ignore this email</li>
+    <li>Never share your access code with anyone</li>
+</ul>
+
+<p>If you continue to have issues, please contact our support team.</p>
+
+<p>
+    Best regards,<br />
+    <strong>The HMS Team</strong>
+</p>

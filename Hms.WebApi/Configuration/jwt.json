@@ -1,0 +1,10 @@
+{
+  "JWTSettings": {
+    "JWTSecretKey": "HMS-Super-Secret-Key-That-Should-Be-At-Least-256-Bits-Long-For-Security",
+    "Issuer": "HMSAPI",
+    "Audience": "HMSWebApp",
+    "AccessTokenExpiryInMinutes": 15,
+    "RefreshTokenExpiryInDays": 7,
+    "ClockSkew": 5
+  }
+}

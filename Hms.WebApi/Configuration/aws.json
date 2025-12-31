@@ -1,0 +1,13 @@
+{
+  "AWS": {
+    "Region": "ap-southeast-1",
+    "S3": {
+      "Private": {
+        "BucketName": "hms-private-bucket-2026"
+      },
+      "Public": {
+        "BucketName": "hms-public-bucket-2025"
+      }
+    }
+  }
+}

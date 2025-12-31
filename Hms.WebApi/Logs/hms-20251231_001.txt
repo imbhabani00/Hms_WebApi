@@ -1,0 +1,4 @@
+{"@t":"2025-12-31T04:55:35.0438379Z","@mt":"JWT Secret Key loaded successfully","Application":"HMSAPI"}
+{"@t":"2025-12-31T04:55:35.0767765Z","@mt":"AWS S3 services configured successfully for region: {Region}","Region":"ap-southeast-1","Application":"HMSAPI"}
+{"@t":"2025-12-31T04:55:36.8059876Z","@mt":"Starting HMS Web API in {Environment} environment","Environment":"Development","Application":"HMSAPI"}
+{"@t":"2025-12-31T13:00:16.5859077Z","@mt":"SQL Connection successful: {DbServer}","DbServer":"(localdb)\\mssqllocaldb","Application":"HMSAPI"}

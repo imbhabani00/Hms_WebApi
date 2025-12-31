@@ -1,0 +1,35 @@
+﻿@model Hms.Service.Request.Email.WelcomeEmailModel
+@{
+    Layout = "_EmailLayout";
+    ViewBag.LogoUrl = Model.LoginUrl;
+}
+
+<h1>Welcome to HMS! 🎊</h1>
+
+<p>Hi <strong>@Model.FirstName @Model.LastName</strong>,</p>
+
+<p>Congratulations! Your email has been verified successfully, and your HMS account is now active.</p>
+
+<p>You can now access all features of the Hospital Management System:</p>
+
+<ul>
+    <li>✅ Manage patient records</li>
+    <li>✅ Schedule appointments</li>
+    <li>✅ Access medical reports</li>
+    <li>✅ Communicate with healthcare team</li>
+    <li>✅ Track medical history</li>
+</ul>
+
+<p><strong>Getting Started:</strong></p>
+<ol>
+    <li>Complete your profile information</li>
+    <li>Set up your preferences</li>
+    <li>Explore the dashboard features</li>
+</ol>
+
+<p>If you have any questions or need assistance, our support team is here to help.</p>
+
+<p>
+    Best regards,<br />
+    <strong>The HMS Team</strong>
+</p>

@@ -1,0 +1,15 @@
+# .NET
+bin/
+obj/
+.vs/
+*.user
+*.suo
+appsettings.json
+appsettings.Development.json
+ 
+# Logs
+*.log
+ 
+# OS files
+.DS_Store
+Thumbs.db
