@@ -104,8 +104,10 @@ namespace Hms.Service
         #region SendEmailViaSendGrid
         public async Task SendEmailViaSendGrid(string toEmail, string subject, string htmlContent)
         {
-            string apiKey = _configuration.GetValue<string>("SendGridApiKey");
-            string fromEmail = _configuration.GetValue<string>("FromEmail") ?? "noreply@hms.com";
+            string apiKey = _configuration.GetValue<string>("SendGrid:ApiKey");
+            //string apiKey = _configuration["SendGrid:ApiKey"];
+
+            string fromEmail = _configuration.GetValue<string>("SendGrid:FromEmail") ?? "noreply@hms.com";
 
             var client = new SendGrid.SendGridClient(apiKey);
             var from = new SendGrid.Helpers.Mail.EmailAddress(fromEmail, "HMS System");

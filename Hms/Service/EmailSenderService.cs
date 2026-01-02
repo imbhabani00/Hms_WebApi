@@ -48,9 +48,11 @@ namespace Hms.Service
             {
                 var viewResult = _razorViewEngine.FindView(actionContext, viewName, false);
 
-                if (viewResult.View == null)
+                if (!viewResult.Success)
                 {
-                    throw new ArgumentNullException($"View '{viewName}' not found");
+                    throw new InvalidOperationException(
+                            $"View '{viewName}' not found.\n" +
+                            string.Join("\n", viewResult.SearchedLocations));
                 }
 
                 var viewDictionary = new ViewDataDictionary<TModel>(

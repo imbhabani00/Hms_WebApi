@@ -7,7 +7,6 @@ using Hms.WebApi.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
-using System.Configuration;
 using System.Net;
 using System.Security.Claims;
 
@@ -31,7 +30,7 @@ namespace Hms.WebApi.Controllers
             ITokenService tokenService,
             IConfiguration configuration,
             ICachedConfigurationService cachedConfigurationService,
-            ILogger logger) :
+            ILogger<TokenController> logger) :
             base(configuration, cachedConfigurationService)
         {
             _userService = userService;
@@ -51,15 +50,18 @@ namespace Hms.WebApi.Controllers
 
             try
             {
+                ResolveUserIdentity();
+
                 // Encrypt password
                 string bsmKey = _configuration.GetValue<string>("BSMSecret");
-                string encryptedPassword =
-                    BSMEncryptDecryptHelper.Encrypt(authModel.Password, bsmKey, 256);
+                string encryptedPassword = BSMEncryptDecryptHelper.Encrypt(authModel.Password, bsmKey, 256);
+                var tenantId = authModel.TenantId;
 
                 // Validate user
                 var response = await _userService.Validate(
                     authModel.Email,
-                    encryptedPassword
+                    encryptedPassword,
+                    tenantId
                 );
 
                 switch (response.ReturnValue)
@@ -96,7 +98,7 @@ namespace Hms.WebApi.Controllers
                                 token = accessToken,
                                 refreshToken = refreshToken,
                                 expires = expires,
-                                userId = response.User.Id,
+                                userId = response.User.UserId,
                                 email = response.User.Email,
                                 firstName = response.User.FirstName,
                                 lastName = response.User.LastName,
@@ -109,19 +111,16 @@ namespace Hms.WebApi.Controllers
                         break;
 
                     case 1:
-                        apiResponse = CreateFailedApiResponse(
-                            response,
-                            HttpStatusCode.Unauthorized,
-                            "Your account is inactive."
-                        );
+                        apiResponse = CreateFailedApiResponse(response, HttpStatusCode.Unauthorized, "Your account is inactive.");
                         break;
-
                     case 2:
-                        apiResponse = CreateFailedApiResponse(
-                            response,
-                            HttpStatusCode.Unauthorized,
-                            "Invalid email or password."
-                        );
+                        apiResponse = CreateFailedApiResponse(response, HttpStatusCode.Unauthorized, "Invalid password.");
+                        break;
+                    case 3:
+                        apiResponse = CreateFailedApiResponse(response, HttpStatusCode.Unauthorized, "Account has been deleted.");
+                        break;
+                    case 4: 
+                        apiResponse = CreateFailedApiResponse(response, HttpStatusCode.Unauthorized, "Email address not found.");
                         break;
 
                     default:

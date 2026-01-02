@@ -33,11 +33,11 @@ builder.Configuration
 var connectionString = builder.Configuration.GetConnectionString("HmsConnectionString");
 
 // ========== SERILOG CONFIGURATION ==========
-Log.Logger = new LoggerConfiguration()
-    .ReadFrom.Configuration(builder.Configuration)
-    .WriteTo.Console()
-    .Enrich.FromLogContext()
-    .CreateLogger();
+//Log.Logger = new LoggerConfiguration()
+//    .ReadFrom.Configuration(builder.Configuration)
+//    .WriteTo.Console()
+//    .Enrich.FromLogContext()
+//    .CreateLogger();
 
 if (!string.IsNullOrEmpty(connectionString))
 {
@@ -48,7 +48,7 @@ if (!string.IsNullOrEmpty(connectionString))
         Log.Information("SQL Connection successful: {DbServer}", testConn.DataSource);
 
         Log.Logger = new LoggerConfiguration()
-            .ReadFrom.Configuration(builder.Configuration)
+            //.ReadFrom.Configuration(builder.Configuration)
             .WriteTo.MSSqlServer(
                 connectionString: connectionString,
                 schemaName: "dbo",
@@ -63,7 +63,7 @@ if (!string.IsNullOrEmpty(connectionString))
     }
     catch (Exception ex)
     {
-        Log.Error(ex, "❌ SQL Connection failed. Using console only. Conn: {Conn}",
+        Log.Error(ex, "SQL Connection failed. Using console only. Conn: {Conn}",
             connectionString?.Substring(0, Math.Min(50, connectionString.Length)) + "...");
 
         // Fallback to console
