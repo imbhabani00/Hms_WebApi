@@ -16,7 +16,7 @@ namespace Hms.Service
     public interface IUserService
     {
         Task<GenericResponse> RegisterAsync(UserRequest userRequest, int userId, int tenantId);
-        Task<UserResponseGet> Validate(string email, string password);
+        Task<UserResponseGet> Validate(string email, string password, int tenantId);
         Task<int> UpdateUserAccessCode(int loggedInUserId, int tenantId);
         Task<int> ValidateAccessCode(int userId, int timeValid, string accessCode);
         Task<UserResponseGet> GetByUserId(int userId, int tenantId);
@@ -97,9 +97,9 @@ namespace Hms.Service
         #endregion
 
         #region Validate
-        public async Task<UserResponseGet> Validate(string email, string password)
+        public async Task<UserResponseGet> Validate(string email, string password, int tenantId)
         {
-            var request = await _userRepository.Validate(email, password);
+            var request = await _userRepository.Validate(email, password, tenantId);
             var response = _mapper.Map<UserGet, UserResponseGet>(request);
             return response;
         }
