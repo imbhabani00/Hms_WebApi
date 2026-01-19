@@ -1,35 +1,50 @@
 ﻿@model Hms.Service.Request.Email.WelcomeEmailModel
 @{
     Layout = "~/Views/EmailTemplates/_EmailLayout.cshtml";
-    ViewBag.LogoUrl = Model.LoginUrl;
+    ViewBag.LogoUrl = Model.LogoUrl;
+    ViewBag.LoginUrl = Model.LoginUrl;
 }
 
-<h1>Welcome to HMS! 🎊</h1>
+<!-- Logo Header -->
+<div style="text-align: center; margin-bottom: 25px;">
+    <img src="@ViewBag.LogoUrl" alt="HMS Logo" style="max-width: 140px; height: auto;" />
+</div>
 
-<p>Hi <strong>@Model.FirstName @Model.LastName</strong>,</p>
+<div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #333; line-height: 1.6; max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+    <h1 style="font-size: 24px; color: #1e3a8a; text-align: center; border-bottom: 2px solid #0066cc; padding-bottom: 10px; margin-bottom: 30px;">
+        Welcome to HMS! 🎊
+    </h1>
 
-<p>Congratulations! Your email has been verified successfully, and your HMS account is now active.</p>
+    <p>Hi <strong>@Model.FirstName @Model.LastName</strong>,</p>
 
-<p>You can now access all features of the Hospital Management System:</p>
+    <p>Congratulations! Your email has been verified successfully, and your HMS account is now active.</p>
 
-<ul>
-    <li>✅ Manage patient records</li>
-    <li>✅ Schedule appointments</li>
-    <li>✅ Access medical reports</li>
-    <li>✅ Communicate with healthcare team</li>
-    <li>✅ Track medical history</li>
-</ul>
+    <p>You can now access all the core features of the <strong>Hospital Management System</strong> to streamline your workflow and enhance patient care:</p>
 
-<p><strong>Getting Started:</strong></p>
-<ol>
-    <li>Complete your profile information</li>
-    <li>Set up your preferences</li>
-    <li>Explore the dashboard features</li>
-</ol>
+    <div style="background-color: #f8fafc; border: 1px solid #dde3ea; border-radius: 6px; padding: 20px 25px; margin: 25px 0;">
+        <ul style="margin: 0; padding-left: 18px; color: #333;">
+            <li>Manage patient records</li>
+            <li>Schedule appointments</li>
+            <li>Access and share medical reports</li>
+            <li>Communicate with your healthcare team</li>
+            <li>Track patient medical history</li>
+        </ul>
+    </div>
 
-<p>If you have any questions or need assistance, our support team is here to help.</p>
+    <div style="background-color: #e8f5e9; border-left: 4px solid #28a745; padding: 12px 18px; margin: 25px 0;">
+        <p style="margin: 0; font-weight: 600; color: #256029;">Getting Started</p>
+    </div>
 
-<p>
-    Best regards,<br />
-    <strong>The HMS Team</strong>
-</p>
+    <ol style="margin: 10px 0 25px 20px; color: #444;">
+        <li>Complete your profile information.</li>
+        <li>Set up your preferences and notifications.</li>
+        <li>Explore the interactive dashboard.</li>
+    </ol>
+
+    <p>If you have any questions or need assistance, our <a href="@ViewBag.LoginUrl" style="color: #0066cc; text-decoration: none;">support team</a> is here to help you.</p>
+
+    <p style="margin-top: 30px;">
+        Best regards,<br />
+        <strong style="color: #2c3e50;">The HMS Team</strong>
+    </p>
+</div>

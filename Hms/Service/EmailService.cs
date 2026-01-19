@@ -9,7 +9,7 @@ namespace Hms.Service
     #region Interface
     public interface IEmailService
     {
-        Task SendRegistrationEmail(UserRequest userRequest, string accessCode);
+        Task SendRegistrationEmail(UserRequest userRequest);
         Task SendAccessCodeEmail(Domains.User.User user, string accessCode);
         Task SendEmailViaSendGrid(string toEmail, string subject, string htmlContent);
     }
@@ -29,7 +29,7 @@ namespace Hms.Service
         #endregion
 
         #region SendRegistrationEmail
-        public async Task SendRegistrationEmail(UserRequest userRequest, string accessCode)
+        public async Task SendRegistrationEmail(UserRequest userRequest)
         {
             try
             {
@@ -42,6 +42,7 @@ namespace Hms.Service
                     LastName = userRequest.LastName,
                     Email = userRequest.Email,
                     LoginUrl = $"{webAppUrl}/Account/Login",
+                    LogoUrl = $"{webAppUrl}/images/logo.png"
                 };
 
                 // Render view to string
@@ -78,7 +79,8 @@ namespace Hms.Service
                     LastName = user.LastName,
                     AccessCode = accessCode,
                     ValidMinutes = 60,
-                    LoginUrl = $"{webAppUrl}/images/logo.png"
+                    LoginUrl = $"{webAppUrl}/Account/Login",
+                    LogoUrl = $"{webAppUrl}/images/logo.png"
                 };
 
                 string emailBody = await _emailSenderService.RenderViewToStringAsync(

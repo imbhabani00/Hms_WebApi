@@ -7,6 +7,7 @@
         public string? AccessCode { get; set; }
         public int ValidMinutes { get; set; }
         public string? LoginUrl { get; set; }
+        public string? LogoUrl { get; set; }
     }
     public class WelcomeEmailModel
     {
@@ -15,5 +16,6 @@
         public string? Email { get; set; }
         public string? Password { get; set; }
         public string? LoginUrl { get; set; }
+        public string? LogoUrl { get; set; }
     }
 }

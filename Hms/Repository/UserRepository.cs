@@ -12,7 +12,7 @@ namespace Hms.Repository
         Task<GenericResult> Register(Domains.User.User userRequest, int userId, int tenantId);
         Task<UserGet> Validate(string email, string password, int tenantId);
         Task<int> UpdateUserAccessCode(string accessCode, int loggedinUserId);
-        Task<int> ValidateAccessCode(int userId, int timeValid, string accessCode);
+        Task<GenericResult> ValidateAccessCode(int userId, int timeValid, string accessCode);
         Task<UserGet> GetByUserId(int userId, int tenantId);
     }
     #endregion
@@ -105,22 +105,22 @@ namespace Hms.Repository
         #endregion
 
         #region ValidateAccessCode
-        public async Task<int> ValidateAccessCode(int userId, int timeValid, string accessCode)
+        public async Task<GenericResult> ValidateAccessCode(int userId, int timeValid, string accessCode)
         {
-            int returnValue;
+            var response = new GenericResult();
             using (var dbConnection = CreateConnection())
             {
                 var dynamicParameters = new DynamicParameters();
                 dynamicParameters.Add("@UserId", userId);
-                dynamicParameters.Add("@TimeValid", timeValid);
                 dynamicParameters.Add("@AccessCode", accessCode);
+                dynamicParameters.Add("@TimeValid", timeValid);
                 dynamicParameters.Add(name: "@ReturnVal", dbType: DbType.Int32, direction: ParameterDirection.ReturnValue);
 
                 dbConnection.Open();
                 await dbConnection.ExecuteAsync("[dbo].[User_ValidateAccessCode]", dynamicParameters, commandType: CommandType.StoredProcedure);
-                returnValue = dynamicParameters.Get<int>("@ReturnVal");
+                response.ReturnValue = dynamicParameters.Get<int?>("@ReturnVal");
 
-                return returnValue;
+                return response;
             }
         }
         #endregion

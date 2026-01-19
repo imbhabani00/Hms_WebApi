@@ -18,10 +18,11 @@ namespace Hms.Service
         Task<GenericResponse> RegisterAsync(UserRequest userRequest, int userId, int tenantId);
         Task<UserResponseGet> Validate(string email, string password, int tenantId);
         Task<int> UpdateUserAccessCode(int loggedInUserId, int tenantId);
-        Task<int> ValidateAccessCode(int userId, int timeValid, string accessCode);
+        Task<GenericResponse> ValidateAccessCode(int userId, int timeValid, string accessCode);
         Task<UserResponseGet> GetByUserId(int userId, int tenantId);
     }
     #endregion
+
     public class UserService : BaseService, IUserService
     {
         #region Properties
@@ -68,7 +69,7 @@ namespace Hms.Service
 
                 if (saveResult.ReturnValue == 0 && saveResult.NewId > 0)
                 {
-                    await _emailService.SendRegistrationEmail(userRequest, string.Empty);
+                    await _emailService.SendRegistrationEmail(userRequest);
 
                     genericResponse = _mapper.Map<GenericResult, GenericResponse>(saveResult);
                     genericResponse.Message = "Registration successful! Please check your email.";
@@ -135,28 +136,11 @@ namespace Hms.Service
         #endregion
 
         #region ValidateAccessCode
-        public async Task<int> ValidateAccessCode(int userId, int timeValid, string accessCode)
+        public async Task<GenericResponse> ValidateAccessCode(int userId, int timeValid, string accessCode)
         {
-            int returnValue = -1;
-            try
-            {
-                returnValue = await _userRepository.ValidateAccessCode(userId, timeValid, accessCode);
-
-                if (returnValue == 0)
-                {
-                    Log.Information("Access code validated for UserId: {UserId}", userId);
-                }
-                else
-                {
-                    Log.Warning("Invalid access code for UserId: {UserId}", userId);
-                }
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex, "Error validating access code for UserId: {UserId}", userId);
-            }
-
-            return returnValue;
+            var request = await _userRepository.ValidateAccessCode(userId, timeValid, accessCode);
+            var response = _mapper.Map<GenericResult,GenericResponse>(request);
+            return response;
         }
         #endregion
 
@@ -170,4 +154,3 @@ namespace Hms.Service
         #endregion
     }
 }
-

@@ -1,31 +1,46 @@
 ﻿@model Hms.Service.Request.Email.AccessCodeEmailModel
 @{
     Layout = "~/Views/EmailTemplates/_EmailLayout.cshtml";
+    ViewBag.LogoUrl = Model.LogoUrl;
     ViewBag.LoginUrl = Model.LoginUrl;
 }
 
-<h1>Your Access Code 🔐</h1>
-
-<p>Hi <strong>@Model.FirstName @Model.LastName</strong>,</p>
-
-<p>We received a request for a new access code for your HMS account. Use the code below to complete your login:</p>
-
-<div class="access-code-box">
-    <p style="margin: 0 0 10px 0; color: #666; font-size: 14px;">Your Access Code</p>
-    <div class="access-code">@Model.AccessCode</div>
-    <p style="margin: 10px 0 0 0; color: #999; font-size: 12px;">Valid for @Model.ValidMinutes minutes</p>
+<!-- Logo Header -->
+<div style="text-align: center; margin-bottom: 25px;">
+    <img src="@ViewBag.LogoUrl" alt="HMS Logo" style="max-width: 140px; height: auto;" />
 </div>
 
-<p><strong>Security Notice:</strong></p>
-<ul>
-    <li>This code expires in <strong>@Model.ValidMinutes minutes</strong></li>
-    <li>If you didn't request this code, please ignore this email</li>
-    <li>Never share your access code with anyone</li>
-</ul>
+<div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #333; line-height: 1.6; max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+    <h1 style="font-size: 22px; color: #2c3e50; text-align: center; border-bottom: 2px solid #0066cc; padding-bottom: 10px; margin-bottom: 30px;">
+        Your Access Code 🔐
+    </h1>
 
-<p>If you continue to have issues, please contact our support team.</p>
+    <p>Hi <strong>@Model.FirstName @Model.LastName</strong>,</p>
 
-<p>
-    Best regards,<br />
-    <strong>The HMS Team</strong>
-</p>
+    <p>We received a request for a new access code for your HMS account. Use the code below to complete your login : </p>
+
+    <div style="background-color: #f8fafc; border: 1px solid #dde3ea; border-radius: 6px; text-align: center; padding: 20px; margin: 25px 0;">
+        <p style="margin: 0 0 5px 0; color: #555; font-size: 14px;">Your Access Code</p>
+        <div style="font-size: 28px; font-weight: bold; color: #1e3a8a; letter-spacing: 3px; margin: 10px 0;">
+            @Model.AccessCode
+        </div>
+        <p style="margin: 8px 0 0 0; color: #888; font-size: 13px;">Valid for @Model.ValidMinutes minutes</p>
+    </div>
+
+    <div style="background-color: #fff8e5; border-left: 4px solid #f59e0b; padding: 10px 15px; margin-bottom: 20px;">
+        <p style="margin: 0; font-weight: 600; color: #b45309;">Security Notice</p>
+    </div>
+
+    <ul style="margin: 10px 0 25px 20px; padding: 0; color: #555;">
+        <li>This code expires in <strong>@Model.ValidMinutes minutes</strong>.</li>
+        <li>If you didn't request this code, please ignore this email.</li>
+        <li>Never share your access code with anyone.</li>
+    </ul>
+
+    <p>If you continue to have issues, please contact our <a href="@ViewBag.LoginUrl" style="color: #0066cc; text-decoration: none;">support team</a>.</p>
+
+    <p style="margin-top: 25px;">
+        Best regards,<br />
+        <strong style="color: #2c3e50;">Bhabanishankar Mishra</strong>
+    </p>
+</div>

@@ -123,22 +123,25 @@ namespace Hms.WebApi.Controllers
 
                 var response = await _userService.ValidateAccessCode(loggedInUserId, timeValid, accessCode);
 
-                if (response == 0)
+                switch (response.ReturnValue)
                 {
-                    apiResponse = CreateSuccessApiResponse(response, HttpStatusCode.OK, "Access code validated successfully");
+                    case 0:
+                        apiResponse = CreateSuccessApiResponse(response, HttpStatusCode.OK, "Access code validated successfully");
+                        break;
+                    case 1:
+                        apiResponse = CreateFailedApiResponse(null, HttpStatusCode.BadRequest, "Invalid access code");
+                        break;
+                    case 2:
+                        apiResponse = CreateFailedApiResponse(null, HttpStatusCode.BadRequest, "User not found");
+                        break;
+                    case 3:
+                        apiResponse = CreateFailedApiResponse(null, HttpStatusCode.BadRequest, "Access code expired");
+                        break;
+                    default:
+                        apiResponse = CreateFailedApiResponse(null, HttpStatusCode.InternalServerError, "Validation failed");
+                        break;
                 }
-                else if (response == 1)
-                {
-                    apiResponse = CreateFailedApiResponse(null, HttpStatusCode.BadRequest, "Invalid access code");
-                }
-                else if (response == 3)
-                {
-                    apiResponse = CreateFailedApiResponse(null, HttpStatusCode.BadRequest, "Access code expired");
-                }
-                else
-                {
-                    apiResponse = CreateFailedApiResponse(null, HttpStatusCode.InternalServerError, "Validation failed");
-                }
+               
             }
             catch (Exception ex)
             {
