@@ -152,5 +152,37 @@ namespace Hms.WebApi.Controllers
             return new ObjectResult(apiResponse);
         }
         #endregion
+
+
+        [HttpGet]
+        [Route("get-by-id")]
+        #region GetById
+        public async Task<IActionResult> GetById()
+        {
+            var apiResponse = new ApiResponse();
+            try
+            {
+                int loggedInUserId = Convert.ToInt32(this.User.Identity.GetUserId());
+                int tenantId = Convert.ToInt32(this.User.Identity.GetTenantId());
+
+                var response = await _userService.GetByUserId(loggedInUserId, tenantId);
+
+                if (response.ReturnValue == 0)
+                {
+                    apiResponse = CreateSuccessApiResponse(response, HttpStatusCode.OK, "User details retrived successfully.");
+                }
+                else
+                {
+                    apiResponse = CreateFailedApiResponse(null, HttpStatusCode.InternalServerError, "Failed to retrive user details");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Failed to get the data of user: {Message}", ex.Message);
+                apiResponse = CreateFailedApiResponse(null, HttpStatusCode.InternalServerError, "Failed to retrive user details");
+            }
+            return new ObjectResult(apiResponse);
+        }
+        #endregion
     }
 }
