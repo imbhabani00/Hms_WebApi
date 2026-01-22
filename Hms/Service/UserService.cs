@@ -18,7 +18,7 @@ namespace Hms.Service
         Task<GenericResponse> RegisterAsync(UserRequest userRequest, int userId, int tenantId);
         Task<UserResponseGet> Validate(string email, string password, int tenantId);
         Task<int> UpdateUserAccessCode(int loggedInUserId, int tenantId);
-        Task<GenericResponse> ValidateAccessCode(int userId, int timeValid, string accessCode);
+        Task<UserResponseGet> ValidateAccessCode(int userId, int timeValid, string accessCode);
         Task<UserResponseGet> GetByUserId(int userId, int tenantId);
     }
     #endregion
@@ -136,10 +136,10 @@ namespace Hms.Service
         #endregion
 
         #region ValidateAccessCode
-        public async Task<GenericResponse> ValidateAccessCode(int userId, int timeValid, string accessCode)
+        public async Task<UserResponseGet> ValidateAccessCode(int userId, int timeValid, string accessCode)
         {
             var request = await _userRepository.ValidateAccessCode(userId, timeValid, accessCode);
-            var response = _mapper.Map<GenericResult,GenericResponse>(request);
+            var response = _mapper.Map<UserGet, UserResponseGet>(request);
             return response;
         }
         #endregion

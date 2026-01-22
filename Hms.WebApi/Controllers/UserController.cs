@@ -2,6 +2,7 @@
 using Hms.Service;
 using Hms.Service.Request.Users;
 using Hms.Service.Response;
+using Hms.Service.Response.Users;
 using Hms.WebApi.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -20,6 +21,7 @@ namespace Hms.WebApi.Controllers
         private readonly IUserService _userService;
         private readonly ILogger<UserController> _logger;
         private readonly IConfiguration _configuration;
+        private readonly ITokenService _tokenService;
         #endregion
 
         #region  Constructor
@@ -27,12 +29,14 @@ namespace Hms.WebApi.Controllers
             ICachedConfigurationService cachedConfigurationService,
             IConfiguration configuration,
             IUserService userService,
-            ILogger<UserController> logger
+            ILogger<UserController> logger,
+            ITokenService tokenService
             ) : base(configuration, cachedConfigurationService)
         {
             _userService = userService;
             _logger = logger;
             _configuration = configuration;
+            _tokenService = tokenService;
         }
         #endregion
 
@@ -126,8 +130,52 @@ namespace Hms.WebApi.Controllers
                 switch (response.ReturnValue)
                 {
                     case 0:
-                        apiResponse = CreateSuccessApiResponse(response, HttpStatusCode.OK, "Access code validated successfully");
+                        var user = response.User;
+
+                        if (user == null)
+                        {
+                            apiResponse = CreateFailedApiResponse(null, HttpStatusCode.BadRequest, "User data not found");
+                            break;
+                        }
+
+                        var expires = DateTime.UtcNow.AddMinutes(
+                            _configuration.GetValue<int>("JWTSettings:AccessTokenExpiryInMinutes")
+                        );
+
+                        var userForToken = new UserResponse
+                        {
+                            UserId = user.UserId,
+                            Email = user.Email,
+                            FirstName = user.FirstName,
+                            LastName = user.LastName,
+                            RoleId = user.RoleId,
+                            RoleName = user.RoleName,
+                            TenantId = user.TenantId
+                        };
+
+                        var accessToken = _tokenService.GenerateAccessToken(userForToken, expires);
+                        var refreshToken = _tokenService.GenerateRefreshToken(userForToken);
+
+                        var authResponse = new
+                        {
+                            token = accessToken,
+                            refreshToken = refreshToken,
+                            expires = expires,
+                            userId = user.UserId,
+                            email = user.Email,
+                            firstName = user.FirstName,
+                            lastName = user.LastName,
+                            roleId = user.RoleId,
+                            roleName = user.RoleName,
+                            roleCode = user.RoleCode, 
+                            tenantId = user.TenantId,
+                            profileCode = user.ProfileCode,
+                            colorCode = user.ColorCode
+                        };
+
+                        apiResponse = CreateSuccessApiResponse(authResponse, HttpStatusCode.OK, "Access code validated successfully");
                         break;
+
                     case 1:
                         apiResponse = CreateFailedApiResponse(null, HttpStatusCode.BadRequest, "Invalid access code");
                         break;
@@ -141,7 +189,6 @@ namespace Hms.WebApi.Controllers
                         apiResponse = CreateFailedApiResponse(null, HttpStatusCode.InternalServerError, "Validation failed");
                         break;
                 }
-               
             }
             catch (Exception ex)
             {
@@ -149,38 +196,6 @@ namespace Hms.WebApi.Controllers
                 apiResponse = CreateFailedApiResponse(null, HttpStatusCode.InternalServerError, "Internal server error");
             }
 
-            return new ObjectResult(apiResponse);
-        }
-        #endregion
-
-
-        [HttpGet]
-        [Route("get-by-id")]
-        #region GetById
-        public async Task<IActionResult> GetById()
-        {
-            var apiResponse = new ApiResponse();
-            try
-            {
-                int loggedInUserId = Convert.ToInt32(this.User.Identity.GetUserId());
-                int tenantId = Convert.ToInt32(this.User.Identity.GetTenantId());
-
-                var response = await _userService.GetByUserId(loggedInUserId, tenantId);
-
-                if (response.ReturnValue == 0)
-                {
-                    apiResponse = CreateSuccessApiResponse(response, HttpStatusCode.OK, "User details retrived successfully.");
-                }
-                else
-                {
-                    apiResponse = CreateFailedApiResponse(null, HttpStatusCode.InternalServerError, "Failed to retrive user details");
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError("Failed to get the data of user: {Message}", ex.Message);
-                apiResponse = CreateFailedApiResponse(null, HttpStatusCode.InternalServerError, "Failed to retrive user details");
-            }
             return new ObjectResult(apiResponse);
         }
         #endregion

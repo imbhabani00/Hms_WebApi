@@ -13,6 +13,9 @@
         public bool AgreeToTerms { get; set; }
         public int TenantId { get; set; }
         public int? UserId { get; set; }
+        public string? RoleCode { get; set; }
+        public string? ProfileCode { get; set; }
+        public string? ColorCode { get; set; }
     }
 
     public class UserGet
